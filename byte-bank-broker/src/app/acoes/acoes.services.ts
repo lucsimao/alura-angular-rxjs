@@ -1,7 +1,7 @@
 import { Acao, Acoes, AcoesAPI } from './modelos/acoes';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, pluck, tap } from 'rxjs/operators';
 
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -9,14 +9,18 @@ import { Observable } from 'rxjs';
 export class AcoesService {
   constructor(private httpClient: HttpClient) {}
 
-  public getAcoes(): Observable<Acoes> {
-    return this.httpClient.get<AcoesAPI>('http://localhost:3000/acoes').pipe(
-      tap((value) => console.log(value)),
-      pluck('payload'),
-      map((acoes: Acoes) =>
-        acoes.sort((acaoA, acaoB) => this.ordenaPorCodigo(acaoA, acaoB))
-      )
-    );
+  public getAcoes(valor?: string): Observable<Acoes> {
+    const params = valor ? new HttpParams().append('valor', valor) : undefined;
+
+    return this.httpClient
+      .get<AcoesAPI>('http://localhost:3000/acoes', { params })
+      .pipe(
+        tap((value) => console.log(value)),
+        pluck('payload'),
+        map((acoes: Acoes) =>
+          acoes.sort((acaoA, acaoB) => this.ordenaPorCodigo(acaoA, acaoB))
+        )
+      );
   }
 
   private ordenaPorCodigo(acaoA: Acao, acaoB: Acao) {
