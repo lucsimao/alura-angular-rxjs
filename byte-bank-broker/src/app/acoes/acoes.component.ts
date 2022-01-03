@@ -1,4 +1,10 @@
-import { debounceTime, filter, switchMap, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
 import { AcoesService } from './acoes.services';
 import { Component } from '@angular/core';
@@ -24,6 +30,7 @@ export class AcoesComponent {
     filter(
       (valorDigitado) => valorDigitado.length >= 3 || !valorDigitado.length
     ),
+    distinctUntilChanged(),
     switchMap((valorDigitado) => this.acoesService.getAcoes(valorDigitado))
   );
 
