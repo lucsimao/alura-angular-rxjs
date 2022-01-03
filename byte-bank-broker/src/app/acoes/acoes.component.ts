@@ -1,4 +1,4 @@
-import { switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 import { AcoesService } from './acoes.services';
 import { Component } from '@angular/core';
@@ -17,6 +17,10 @@ export class AcoesComponent {
     .pipe(tap(() => console.log('Fluxo Inicial')));
   public filtroPeloInput$ = this.acoesInput.valueChanges.pipe(
     tap(() => console.log('Fluxo do Filtro')),
+    tap(() => console.log),
+    filter(
+      (valorDigitado) => valorDigitado.length >= 3 || !valorDigitado.length
+    ),
     switchMap((valorDigitado) => this.acoesService.getAcoes(valorDigitado))
   );
 
